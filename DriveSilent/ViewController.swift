@@ -7,12 +7,32 @@
 //
 
 import UIKit
+import CoreMotion
 
 class ViewController: UIViewController {
+    let motionActivityManager = CMMotionActivityManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        if CMMotionActivityManager.isActivityAvailable(){
+            println("Activity Available")
+            motionActivityManager.startActivityUpdatesToQueue(NSOperationQueue()){
+                (activity: CMMotionActivity!) -> Void in
+                    if activity.walking {
+                        println("MotionTypeWalking")
+                    } else if activity.running {
+                        println("MotionTypeRunning")
+                    } else if activity.automotive {
+                        println("MotionTypeDriving")
+                    } else if activity.stationary || activity.unknown {
+                        println("MotionTypeNotMoving")
+                    }
+                
+            }
+            
+        }else{
+            println("Activity not Available")
+        }
     }
 
     override func didReceiveMemoryWarning() {
